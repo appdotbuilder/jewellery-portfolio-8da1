@@ -1,7 +1,18 @@
+import { db } from '../db';
+import { jewelleryItemsTable } from '../db/schema';
+import { eq } from 'drizzle-orm';
+
 export async function deleteJewelleryItem(id: number): Promise<boolean> {
-    // This is a placeholder declaration! Real code should be implemented here.
-    // The goal of this handler is deleting a jewellery item from the database.
-    // This will be used by the administrative interface to remove jewellery pieces.
-    // Returns true if the item was successfully deleted, false if not found.
-    return Promise.resolve(true);
+  try {
+    // Delete the jewellery item by id
+    const result = await db.delete(jewelleryItemsTable)
+      .where(eq(jewelleryItemsTable.id, id))
+      .execute();
+
+    // Return true if a row was deleted, false if no item found
+    return (result.rowCount ?? 0) > 0;
+  } catch (error) {
+    console.error('Jewellery item deletion failed:', error);
+    throw error;
+  }
 }
